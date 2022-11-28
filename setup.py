@@ -21,7 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     package_dir={"": "."},
-    packages=setuptools.find_packages(where="."),
+    packages=setuptools.find_packages(),
     python_requires=">=3.6",
     install_requires = ['JupyterReviewer==0.0.2',
                         'firecloud-dalmatian',

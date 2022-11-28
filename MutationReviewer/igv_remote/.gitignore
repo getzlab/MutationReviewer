@@ -1,0 +1,7 @@
+__pycache__/
+igv_snapshots/
+*pyc
+*.csv
+testdata/
+testdata/*
+
