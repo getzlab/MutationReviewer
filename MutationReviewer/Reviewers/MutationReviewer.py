@@ -2,6 +2,7 @@ from JupyterReviewer.ReviewerTemplate import ReviewerTemplate
 from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
 from JupyterReviewer.DataTypes.GenericData import GenericData
 from JupyterReviewer.Data import Data, DataAnnotation
+from JupyterReviewer.AnnotationDisplayComponent import *
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
@@ -92,10 +93,96 @@ class MutationReviewer(ReviewerTemplate):
         return app
         
     def set_default_review_data_annotations(self):
+        
+        # Calls
+        self.add_review_data_annotation(
+            'mutation_call', 
+            DataAnnotation(
+                'string',
+                options=['Somatic', 'Germline', 'Ambiguous', 'Failed']
+            )
+        )
+        
+        # Read Artifact Tags
+        self.add_review_data_annotation(
+            'sequencing_tags',
+            DataAnnotation(
+                'multi',
+                options=[
+                    'Directional',
+                    'Multiple Mismatches',
+                    'High discrepancy Region',
+                    'Short Insert',
+                    'Short Insert Only',
+                    'Same Start and End',
+                    "Within 30bp of 3' end"
+                ]
+            )
+        )
+        
+        # Alignment Tags
+        self.add_review_data_annotation(
+            'alignment_tags',
+            DataAnnotation(
+                'multi',
+                options=[
+                    'Low Mapping Quality',
+                    'Adjacent Indel',
+                    'Mononucleotide Repeat',
+                    'Dinucleotide Repeat',
+                    'Tandem Repeat'
+                ]
+            )
+        )
+        
+        self.add_review_data_annotation(
+            'normal_tags',
+            DataAnnotation(
+                'multi',
+                options=[
+                    'No PoN coverage',
+                    'No Count Normal',
+                    'Low Count Normal',
+                    'Tumor in Normal',
+                ]
+            )
+        )
+        
+        self.add_review_data_annotation(
+            'tumor_tags',
+            DataAnnotation(
+                'multi',
+                options=[
+                    'Low Count Tumor',
+                    'Low Vaf in Tumor',
+                    'Multiple Variants in Tumor'
+                ]
+            )
+        )
+        
+        self.add_review_data_annotation(
+            'other_tag_description',
+            DataAnnotation('string')
+        )
+        
         self.add_review_data_annotation('Notes', DataAnnotation('string'))
         
     def set_default_review_data_annotations_app_display(self):
-        self.add_review_data_annotations_app_display('Notes', 'textarea')
+        self.add_review_data_annotations_app_display('mutation_call', 'radioitem')
+        # self.add_review_data_annotations_app_display('sequencing_tags', 'checklist')
+        # self.add_review_data_annotations_app_display('alignment_tags', 'checklist')
+        # self.add_review_data_annotations_app_display('normal_tags', 'checklist')
+        # self.add_review_data_annotations_app_display('tumor_tags', 'checklist')
+        # self.add_review_data_annotations_app_display('other_tag_description', 'text')
+        # self.add_review_data_annotations_app_display('Notes', 'textarea')
+        
+        # alternative
+        self.add_annotation_display_component('sequencing_tags', MultiValueSelectAnnotationDisplay())
+        self.add_annotation_display_component('alignment_tags', MultiValueSelectAnnotationDisplay())
+        self.add_annotation_display_component('normal_tags', MultiValueSelectAnnotationDisplay())
+        self.add_annotation_display_component('tumor_tags', MultiValueSelectAnnotationDisplay())
+        self.add_annotation_display_component('other_tag_description', TextAnnotationDisplay())
+        self.add_annotation_display_component('Notes', TextAreaAnnotationDisplay())
         
     def set_default_autofill(self):
         pass
