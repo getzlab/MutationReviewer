@@ -19,3 +19,15 @@ def load_bams_igv(bams_list, chrom, pos, view_type="collapsed", sort="base"):
         ir.connect()
         ir.new()
         ir.close()
+
+        
+def load_bam_igv(bam, chrom, pos, view_type="collapsed", sort="base"):
+    
+    try:
+        ir.connect()
+    except AssertionError:
+        ir.close()
+        ir.connect()
+        
+    ir.load(bam)
+    ir.close()

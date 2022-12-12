@@ -14,7 +14,7 @@ import os
 import pickle
 import sys
 
-from MutationReviewer.DataTypes.MutationData import MutationData
+from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
 
 
 def gen_mutation_table_component():
@@ -32,13 +32,13 @@ def gen_mutation_table_layout():
     )
 
 def update_mut_table(
-    data: MutationData, 
+    data: GeneralMutationData, 
     idx, 
     mutation_table_display_cols
 ):
     df = data.mutations_df.loc[
         data.mutations_df.apply(
-            lambda r: f'{str(r[data.chrom_col])}:{str(r[data.start_pos_col])}', axis=1
+            lambda r: ':'.join(r[data.group_muts_cols].astype(str).tolist()), axis=1
         ) == idx,
         mutation_table_display_cols
     ]
