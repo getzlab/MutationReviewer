@@ -34,11 +34,13 @@ def gen_mutation_table_layout():
 def update_mut_table(
     data: GeneralMutationData, 
     idx, 
-    mutation_table_display_cols
+    mutation_table_display_cols,
+    gen_data_mut_index_name_func,
 ):
     df = data.mutations_df.loc[
         data.mutations_df.apply(
-            lambda r: ':'.join(r[data.group_muts_cols].astype(str).tolist()), axis=1
+            lambda r: gen_data_mut_index_name_func(r[data.mutation_groupby_cols].astype(str).tolist()), 
+            axis=1
         ) == idx,
         mutation_table_display_cols
     ]

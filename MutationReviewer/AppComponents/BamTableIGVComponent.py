@@ -14,7 +14,7 @@ import os
 import pickle
 import sys
 
-import igv_remote as ir
+# import igv_remote as ir
 
 from .utils import load_bams_igv, load_bam_igv
 from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
@@ -67,16 +67,16 @@ def update_bam_table(
     bam_table_selected_rows,
     bam_table_display_cols
 ):
-    chrom, pos, _ = idx.split(':', 2)
+    chrom, pos = idx.split(':', 1)
     pos = int(pos)
     samples = data.mutations_df.loc[
         (data.mutations_df[data.chrom_col] == chrom) & (data.mutations_df[data.start_pos_col] == pos),
         data.mutations_df_sample_col
     ].tolist()
     bams_df = data.bams_df.loc[data.bams_df[data.bam_df_sample_col].isin(samples), bam_table_display_cols]
-    load_bams_list = bams_df[data.bam_cols].stack().tolist()
+    load_bams_list = bams_df[data.bam_col].tolist()
 
-    load_bams_igv(load_bams_list, chrom, pos)
+    # load_bams_igv(load_bams_list, chrom, pos)
     
     return [bams_df.to_dict('records')]
     

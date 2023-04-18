@@ -15,26 +15,30 @@ from pathlib import Path
 
 import pandas as pd
 import numpy as np
-from MutationReviewer.AppComponents.BamTableIGVComponent import gen_mutation_table_igv_component
+# from MutationReviewer.AppComponents.BamTableIGVComponent import gen_mutation_table_igv_component
+from MutationReviewer.AppComponents.IGVJSComponent import gen_igv_js_component
 from MutationReviewer.AppComponents.MutationTableComponent import gen_mutation_table_component
 from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
         
 
 class GeneralMutationReviewer(ReviewerTemplate):
+    
+    def gen_data_mut_index_name(self, value_list):
+        return ':'.join(value_list)
+        
+        
     def gen_data(
         self,
         description: str,
         mutations_df: pd.DataFrame,
+        mutation_groupby_cols: list, 
+        mutations_df_bam_ref_col: str, 
+        chrom_cols: Union[str, list],
+        pos_cols: Union[str, list],
         bams_df: pd.DataFrame,
-        mutations_df_sample_col: str,
-        chrom_col: str,
-        start_pos_col: str,
-        more_mutation_groupby_cols: list,
-        bam_df_sample_col: str,
+        bams_df_ref_col: str,
         bam_cols: Union[str, list],
-        bai_cols: Union[str, list] = None,
-        end_pos_col = None,
-        igv_img_dir: Union[Path, str] = None,
+        bai_cols: Union[str, list],
         annot_df: pd.DataFrame = None,
         annot_col_config_dict: Dict = None,
         history_df: pd.DataFrame = None,
@@ -52,21 +56,20 @@ class GeneralMutationReviewer(ReviewerTemplate):
         bam_col: str,
         bai_col: str,
         """
-        index = [':'.join(list(map(str, idx))) for idx in mutations_df.groupby([chrom_col, start_pos_col] + more_mutation_groupby_cols).sum().index]
-        mutations_df[chrom_col] = mutations_df[chrom_col].astype(str)
+        index = [self.gen_data_mut_index_name(list(map(str, idx))) for idx in mutations_df.groupby(mutation_groupby_cols).count().index]
+        mutations_df[chrom_cols] = mutations_df[chrom_cols].astype(str)
         return GeneralMutationData(
-            index,
-            description,
+            index=index,
+            description=description,
             mutations_df=mutations_df,
+            mutation_groupby_cols=mutation_groupby_cols,
+            mutations_df_bam_ref_col=mutations_df_bam_ref_col,
+            chrom_cols=chrom_cols,
+            pos_cols=pos_cols,
             bams_df=bams_df,
-            mutations_df_sample_col=mutations_df_sample_col,
-            chrom_col=chrom_col,
-            start_pos_col=start_pos_col,
-            bam_df_sample_col=bam_df_sample_col,
+            bams_df_ref_col=bams_df_ref_col,
             bam_cols=bam_cols,
             bai_cols=bai_cols,
-            end_pos_col=end_pos_col,
-            more_mutation_groupby_cols=more_mutation_groupby_cols,
             annot_df=annot_df,
             annot_col_config_dict=annot_col_config_dict,
             history_df=history_df,
@@ -77,7 +80,8 @@ class GeneralMutationReviewer(ReviewerTemplate):
         self,
         mutation_table_display_cols,
         bam_table_display_cols,
-        bai_col
+        genome,
+        track_height=300
     ) -> ReviewDataApp:
         """
         Parameters
@@ -89,12 +93,21 @@ class GeneralMutationReviewer(ReviewerTemplate):
         
         app.add_component(
             gen_mutation_table_component(),
-            mutation_table_display_cols=mutation_table_display_cols
+            mutation_table_display_cols=mutation_table_display_cols,
+            gen_data_mut_index_name_func=self.gen_data_mut_index_name
         )
         
+        # app.add_component(
+        #     gen_mutation_table_igv_component(bam_table_display_cols),
+        #     bam_table_display_cols=bam_table_display_cols,
+        # )
+        
         app.add_component(
-            gen_mutation_table_igv_component(bam_table_display_cols),
+            gen_igv_js_component(),
             bam_table_display_cols=bam_table_display_cols,
+            genome=genome,
+            track_height=track_height,
+            gen_data_mut_index_name_func=self.gen_data_mut_index_name
         )
         
         return app

@@ -9,17 +9,17 @@ from dash.dependencies import Input, Output, State
 from typing import Dict, List
 import plotly.express as px
 import dash_bootstrap_components as dbc
-# import igv_remote as ir
+import igv_remote as ir
 
 import pandas as pd
 import numpy as np
-from MutationReviewer.AppComponents.BamTableIGVComponent import gen_mutation_table_igv_component
+# from MutationReviewer.AppComponents.BamTableIGVComponent import gen_mutation_table_igv_component
 from MutationReviewer.AppComponents.IGVJSComponent import gen_igv_js_component
 from MutationReviewer.AppComponents.MutationTableComponent import gen_mutation_table_component
 from MutationReviewer.DataTypes.MutationData import MutationData
         
 
-class MutationReviewer(ReviewerTemplate):
+class MutationReviewerEmbeddedIGV(ReviewerTemplate):
     def gen_data(
         self,
         description: str,
@@ -71,9 +71,7 @@ class MutationReviewer(ReviewerTemplate):
         self,
         mutation_table_display_cols,
         bam_table_display_cols,
-        bai_col,
-        genome,
-        track_height
+        bai_col
     ) -> ReviewDataApp:
         """
         Parameters
@@ -88,17 +86,13 @@ class MutationReviewer(ReviewerTemplate):
             mutation_table_display_cols=mutation_table_display_cols
         )
         
-        app.add_component(
-            gen_mutation_table_igv_component(bam_table_display_cols),
-            bam_table_display_cols=bam_table_display_cols,
-        )
-        
+        # app.add_component(
+        #     gen_mutation_table_igv_component(bam_table_display_cols),
+        #     bam_table_display_cols=bam_table_display_cols,
+        # )
+
         app.add_component(
             gen_igv_js_component(),
-            bam_table_display_cols=bam_table_display_cols,
-            genome=genome,
-            bai_col=bai_col,
-            track_height=track_height
         )
         
         return app
