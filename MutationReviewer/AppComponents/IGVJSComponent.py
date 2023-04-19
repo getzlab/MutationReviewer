@@ -31,13 +31,16 @@ def get_gcs_oauth_token():
     GCS_OAUTH_TOKEN = stdout.decode()
     return GCS_OAUTH_TOKEN
 
+
 def gen_igv_session(
     data: GeneralMutationData, 
     idx, 
-    # bam_table_selected_rows,
-    bam_table_display_cols, # not including the bam and bai cols
+    update_tracks_n_clicks,
+    bam_table,
+    bam_table_selected_rows,
     genome,
     track_height,
+    minimumBases,
     gen_data_mut_index_name_func
 ):
     
@@ -47,23 +50,9 @@ def gen_igv_session(
             axis=1
         ) == idx,
     ]
-    
-    bam_ref_values = idx_mut_df[data.mutations_df_bam_ref_col].tolist()
-    
-    bams_df = data.bams_df.loc[data.bams_df[data.bams_df_ref_col].isin(bam_ref_values)].copy()
 
-    stack_cols = [data.bams_df_ref_col] + bam_table_display_cols
-    
-    stack_bams_df = pd.concat(
-        [
-            bams_df.set_index(stack_cols)[data.bam_cols].stack().reset_index().rename(columns={0: 'bam'}), 
-            bams_df.set_index(stack_cols)[data.bai_cols].stack().reset_index().rename(columns={0: 'bai'}), 
-        ],
-        axis=1
-    )
-    
-    stack_bams_df = stack_bams_df.loc[:,~stack_bams_df.columns.duplicated()]
-
+    bams_df = pd.DataFrame.from_records(bam_table)
+    valid_indices = [i for i in bam_table_selected_rows if i in range(bams_df.shape[0])]
     tracks = [
         {
             'name': r[data.bams_df_ref_col],
@@ -74,7 +63,7 @@ def gen_igv_session(
             'showCoverage': True,
             'height': track_height,
             'color': 'rgb(170, 170, 170)'
-        } for _, r in stack_bams_df.iterrows()
+        } for _, r in bams_df.iloc[valid_indices].iterrows()
     ]
     
     locus = [f'{idx_mut_df.iloc[0][chrom]}:{idx_mut_df.iloc[0][pos]}' for chrom, pos in zip(data.chrom_cols, data.pos_cols)]
@@ -82,10 +71,30 @@ def gen_igv_session(
         genome=genome, 
         tracks=tracks, 
         locus=locus, 
-        # minimumBases=
+        minimumBases=minimumBases
     )
 
-def gen_igv_session_layout(genome, tracks, locus):
+def gen_igv_session_update(
+    data: GeneralMutationData, 
+    idx, 
+    update_tracks_n_clicks,
+    bam_table,
+    bam_table_selected_rows,
+    genome,
+    track_height,
+    minimumBases,
+    gen_data_mut_index_name_func
+):
+    return gen_igv_session_layout(
+        genome=genome, 
+        tracks=None, 
+        locus=None, 
+        minimumBases=minimumBases
+    )
+    
+
+
+def gen_igv_session_layout(genome, tracks, locus, minimumBases):
     
     
     return [
@@ -93,25 +102,28 @@ def gen_igv_session_layout(genome, tracks, locus):
             children='igv',
             id='default-igv',
             genome=genome,
-            minimumBases=100,
+            minimumBases=minimumBases,
             locus=locus,
             tracks=tracks
         )
     ]
 
-def gen_igv_js_component():
+def gen_igv_js_component(genome, bam_table_state: State, bam_table_selected_rows_state: State):
     
     return AppComponent(
         name='IGV.js embedded component',
-        layout=gen_mutation_table_igv_layout(),
-        new_data_callback=gen_igv_session,
+        layout=gen_igv_js_layout(genome),
+        new_data_callback=gen_igv_session_update,
         internal_callback=gen_igv_session,
         callback_output=[Output('default-igv-container', 'children')],
+        callback_input=[Input('update-tracks-button', 'n_clicks')],
+        callback_state_external=[bam_table_state, bam_table_selected_rows_state]
     )
 
-def gen_mutation_table_igv_layout():
+def gen_igv_js_layout(genome):
     
     return html.Div([
-        dcc.Loading(children='test', id='default-igv-container'),
+        html.Button('Update tracks from bam table', id='update-tracks-button', n_clicks=0),
+        dcc.Loading(children=gen_igv_session_layout(genome, tracks=None, locus=None, minimumBases=100), id='default-igv-container'),
     ])
     

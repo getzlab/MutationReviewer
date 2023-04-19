@@ -15,8 +15,9 @@ from pathlib import Path
 
 import pandas as pd
 import numpy as np
-# from MutationReviewer.AppComponents.BamTableIGVComponent import gen_mutation_table_igv_component
+from MutationReviewer.AppComponents.BamTableComponent import gen_bam_table_component
 from MutationReviewer.AppComponents.IGVJSComponent import gen_igv_js_component
+from MutationReviewer.AppComponents.IGVLocalComponent import gen_igv_local_component
 from MutationReviewer.AppComponents.MutationTableComponent import gen_mutation_table_component
 from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
         
@@ -80,8 +81,11 @@ class GeneralMutationReviewer(ReviewerTemplate):
         self,
         mutation_table_display_cols,
         bam_table_display_cols,
-        genome,
-        track_height=300
+        genome='hg19',
+        track_height=400,
+        minimumBases=200,
+        init_max_bams_view=2,
+        igv_mode='igv_js', # or 'igv_local'
     ) -> ReviewDataApp:
         """
         Parameters
@@ -97,18 +101,33 @@ class GeneralMutationReviewer(ReviewerTemplate):
             gen_data_mut_index_name_func=self.gen_data_mut_index_name
         )
         
-        # app.add_component(
-        #     gen_mutation_table_igv_component(bam_table_display_cols),
-        #     bam_table_display_cols=bam_table_display_cols,
-        # )
-        
         app.add_component(
-            gen_igv_js_component(),
+            gen_bam_table_component(bam_table_display_cols),
             bam_table_display_cols=bam_table_display_cols,
-            genome=genome,
-            track_height=track_height,
-            gen_data_mut_index_name_func=self.gen_data_mut_index_name
+            gen_data_mut_index_name_func=self.gen_data_mut_index_name,
+            init_max_bams_view=init_max_bams_view
         )
+        
+        if igv_mode == 'igv_js':
+            app.add_component(
+                gen_igv_js_component(
+                    genome=genome, 
+                    bam_table_state=State('bam-table', 'data'), 
+                    bam_table_selected_rows_state=State('bam-table', 'selected_rows')
+                ),
+                genome=genome,
+                track_height=track_height,
+                minimumBases=minimumBases,
+                gen_data_mut_index_name_func=self.gen_data_mut_index_name
+            )
+        elif igv_mode == 'igv_local':
+            app.add_component(
+                gen_igv_local_component(
+                    bam_table_state=State('bam-table', 'data'), 
+                    bam_table_selected_rows_state=State('bam-table', 'selected_rows')
+                ),
+                gen_data_mut_index_name_func=self.gen_data_mut_index_name
+            )
         
         return app
         
