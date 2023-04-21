@@ -85,7 +85,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
         track_height=400,
         minimumBases=200,
         init_max_bams_view=2,
-        igv_mode='igv_js', # or 'igv_local'
+        igv_mode='igv_js', # or 'igv_local' or 'both'
     ) -> ReviewDataApp:
         """
         Parameters
@@ -108,7 +108,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
             init_max_bams_view=init_max_bams_view
         )
         
-        if igv_mode == 'igv_js':
+        if (igv_mode == 'igv_js') or (igv_mode == 'both'):
             app.add_component(
                 gen_igv_js_component(
                     genome=genome, 
@@ -120,7 +120,8 @@ class GeneralMutationReviewer(ReviewerTemplate):
                 minimumBases=minimumBases,
                 gen_data_mut_index_name_func=self.gen_data_mut_index_name
             )
-        elif igv_mode == 'igv_local':
+            
+        if igv_mode == 'igv_local' or (igv_mode == 'both'):
             app.add_component(
                 gen_igv_local_component(
                     bam_table_state=State('bam-table', 'data'), 

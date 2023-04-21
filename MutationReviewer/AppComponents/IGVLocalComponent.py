@@ -75,19 +75,19 @@ def load_igv_session_update(
 def gen_igv_local_component(bam_table_state: State, bam_table_selected_rows_state: State):
     
     return AppComponent(
-        name='IGV.js embedded component',
+        name='Local IGV component',
         layout=gen_igv_local_layout(),
         new_data_callback=load_igv_session,
         internal_callback=load_igv_session_update,
-        callback_output=[Output('default-igv-container', 'children')],
-        callback_input=[Input('update-tracks-button', 'n_clicks')],
+        callback_output=[Output('local-igv-container', 'children')],
+        callback_input=[Input('update-local-igv-button', 'n_clicks')],
         callback_state_external=[bam_table_state, bam_table_selected_rows_state]
     )
 
 def gen_igv_local_layout():
     
     return html.Div([
-        html.Button('Update tracks from bam table', id='update-tracks-button', n_clicks=0),
+        html.Button('Update local IGV from bam table', id='update-local-igv-button', n_clicks=0),
         dcc.Loading(
             children=html.P(
                 """
@@ -95,7 +95,7 @@ def gen_igv_local_layout():
                 2. Login with your google acount (Google > login)
                 """
             ), 
-            id='default-igv-container'
+            id='local-igv-container'
         ),
     ])
     
