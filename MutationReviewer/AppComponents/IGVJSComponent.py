@@ -85,12 +85,15 @@ def gen_igv_session_update(
     minimumBases,
     gen_data_mut_index_name_func
 ):
-    return gen_igv_session_layout(
-        genome=genome, 
-        tracks=None, 
-        locus=None, 
-        minimumBases=minimumBases
-    )
+    
+    return [html.Div()]
+    
+    # return gen_igv_session_layout(
+    #     genome=genome, 
+    #     tracks=None, 
+    #     locus=None, 
+    #     minimumBases=minimumBases
+    # )
     
 
 
@@ -124,6 +127,6 @@ def gen_igv_js_layout(genome):
     
     return html.Div([
         html.Button('Update tracks from bam table', id='update-tracks-button', n_clicks=0),
-        dcc.Loading(children=gen_igv_session_layout(genome, tracks=None, locus=None, minimumBases=100), id='default-igv-container'),
+        dcc.Loading(children="Press button to load IGV", id='default-igv-container'),
     ])
     

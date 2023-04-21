@@ -22,9 +22,10 @@ setuptools.setup(
     ],
     package_dir={"": "."},
     packages=setuptools.find_packages(),
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     install_requires = [
         'JupyterReviewer>=0.0.3',
-         'firecloud-dalmatian',
+        'firecloud-dalmatian',
+        'dash-bio'
     ]
 )   
