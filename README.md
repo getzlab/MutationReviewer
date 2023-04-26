@@ -15,7 +15,7 @@ See [Set up Conda Environment](https://github.com/getzlab/JupyterReviewer/blob/m
 ## Install MutationReviewer inside conda environment
 
 ```
-git clone git@github.com:getzlab/MutationReviewer.git
+git clone git@github.com:getzlab/MutationReviewer.git --recurse-submodules
 cd MutationReviewer
 conda activate <your_env>
 pip install -e .
