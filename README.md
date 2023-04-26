@@ -2,7 +2,7 @@
 
 Suite of reviewers for annotating mutations with IGV.
 
-![MutationReviewer Demo](https://github.com/getzlab/MutationReviewer/blob/master/images/Screen%20Recording%202023-04-20%20at%205.13.38%20PM_compressed.mp4)
+<video src='https://github.com/getzlab/MutationReviewer/blob/master/images/Screen%20Recording%202023-04-20%20at%205.13.38%20PM_compressed.mp4' width=180/>
 
 # Install
 
