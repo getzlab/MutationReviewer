@@ -23,6 +23,16 @@ from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
         
 
 class GeneralMutationReviewer(ReviewerTemplate):
+    '''
+    A general reviewer to annotate individual mutations given a maf-like 
+    table and a table with paths/urls to bams and correpsonding index.
+    
+    Includes pre-configured annotations that follow published standard operation procedures:
+    
+    Barnell, E.K., Ronning, P., Campbell, K.M. et al. Standard operating procedure 
+    for somatic variant refinement of sequencing data with paired tumor and normal samples. 
+    Genet Med 21, 972–981 (2019). https://doi.org/10.1038/s41436-018-0278-z
+    '''
     
     def gen_data_mut_index_name(self, value_list):
         return ':'.join(value_list)
@@ -47,7 +57,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
     ) -> GeneralMutationData:
         """
         Parameters
-        ==========
+        ----------
         mutations_df: pd.DataFrame
             Table of mutations to review. Each observed mutation has its own row (ie one mutation in each sample). 
             It must have columns containing information about:
