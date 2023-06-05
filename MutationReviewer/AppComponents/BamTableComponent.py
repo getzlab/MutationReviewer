@@ -21,14 +21,25 @@ from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
 
 
 def gen_bam_table_component(
-    bam_table_display_cols,
     bam_table_page_size=10,
     init_max_bams_view=3
 ):
+    '''
+    Generate component with a selectable bam table
+    
+    Parameters
+    ----------
+    bam_table_page_size: int
+        Max number of rows displayed in the table per page
+        
+    init_max_bams_view:
+        Number of bams to pre-select for loading to IGV.
+        
+    '''
     
     return AppComponent(
         name='Sample Bam table',
-        layout=gen_mutation_table_igv_layout(bam_table_display_cols, bam_table_page_size, init_max_bams_view),
+        layout=gen_mutation_table_igv_layout(bam_table_page_size, init_max_bams_view),
         callback_input=[Input('bam-table', 'selected_rows')],
         callback_output=[Output('bam-table', 'selected_rows'), Output('bam-table', 'data'), Output('bam-table', 'columns')],
         new_data_callback=new_update_bam_table,
@@ -36,7 +47,6 @@ def gen_bam_table_component(
     )
 
 def gen_mutation_table_igv_layout(
-    bam_table_display_cols,
     bam_table_page_size,
     init_max_bams_view
 ):
@@ -45,9 +55,6 @@ def gen_mutation_table_igv_layout(
             # dbc.Table.from_dataframe(df=pd.DataFrame())
             dash_table.DataTable(
                 id='bam-table',
-                # columns=[
-                #     {"name": i, "id": i} for i in bam_table_display_cols
-                # ],
                 data=pd.DataFrame().to_dict('records'),
                 filter_action="native",
                 sort_action="native",
@@ -70,6 +77,23 @@ def new_update_bam_table(
     gen_data_mut_index_name_func,
     init_max_bams_view
 ):
+    '''
+    Parameters
+    ----------
+    selected_rows: State list
+        List passed by a component State reference that indicates which bam rows are selected.
+        For updates, this list is overrided by init_max_bams_view
+        
+    bam_table_display_cols: list
+        List of columns to display the bams_df table
+        
+    gen_data_mut_index_name_func: func
+        Function used to parse the index to filter the mutation table
+        
+    init_max_bams_view:
+        Number of bams to pre-select for loading to IGV.
+    '''
+    
     # reset selected rows
     selected_rows = list(range(init_max_bams_view))
     return update_bam_table(
@@ -89,17 +113,24 @@ def update_bam_table(
     gen_data_mut_index_name_func,
     init_max_bams_view
 ):
-    # chrom, pos = idx.split(':', 1)
-    # pos = int(pos)
-    # samples = data.mutations_df.loc[
-    #     (data.mutations_df[data.chrom_col] == chrom) & (data.mutations_df[data.start_pos_col] == pos),
-    #     data.mutations_df_sample_col
-    # ].tolist()
-    # bams_df = data.bams_df.loc[data.bams_df[data.bam_df_sample_col].isin(samples), bam_table_display_cols]
-    # load_bams_list = bams_df[data.bam_col].tolist()
-
-    # load_bams_igv(load_bams_list, chrom, pos)
-    # return [bams_df.to_dict('records')]
+    
+    '''
+    Display bam table with bam file paths in a single column.
+    
+    Parameters
+    ----------
+    selected_rows: State list
+        List passed by a component State reference that indicates which bam rows are selected.
+        
+    bam_table_display_cols: list
+        List of columns to display the bams_df table
+        
+    gen_data_mut_index_name_func: func
+        Function used to parse the index to filter the mutation table
+        
+    init_max_bams_view:
+        Number of bams to pre-select for loading to IGV.
+    '''
     
     idx_mut_df = data.mutations_df.loc[
         data.mutations_df[data.mutation_groupby_cols].apply(
