@@ -86,6 +86,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
         minimumBases=200,
         init_max_bams_view=2,
         igv_mode='igv_js', # or 'igv_local'
+        set_env_command=None,
     ) -> ReviewDataApp:
         """
         Parameters
@@ -118,7 +119,8 @@ class GeneralMutationReviewer(ReviewerTemplate):
                 genome=genome,
                 track_height=track_height,
                 minimumBases=minimumBases,
-                gen_data_mut_index_name_func=self.gen_data_mut_index_name
+                gen_data_mut_index_name_func=self.gen_data_mut_index_name,
+                set_env_command=set_env_command
             )
         elif igv_mode == 'igv_local':
             app.add_component(

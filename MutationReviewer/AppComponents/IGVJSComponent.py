@@ -24,11 +24,18 @@ from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
 import os
 import shlex
 from subprocess import Popen, PIPE
-def get_gcs_oauth_token():
-    command = shlex.split('gcloud auth application-default print-access-token')
+def get_gcs_oauth_token(set_env_command=None, access_token_command='gcloud auth application-default print-access-token'):
+    if set_env_command:
+        full_command = f'bash -c "{set_env_command}; {access_token_command}"'
+    else:
+        full_command = access_token_command
+        
+    print(full_command)
+    command = shlex.split(full_command)
     process = Popen(command, stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()
     GCS_OAUTH_TOKEN = stdout.decode()
+
     return GCS_OAUTH_TOKEN
 
 
@@ -41,7 +48,8 @@ def gen_igv_session(
     genome,
     track_height,
     minimumBases,
-    gen_data_mut_index_name_func
+    gen_data_mut_index_name_func,
+    set_env_command=None,
 ):
     
     idx_mut_df = data.mutations_df.loc[
@@ -59,7 +67,7 @@ def gen_igv_session(
             'url': str(r['bam']),
             'indexURL': str(r['bai']),
             'displayMode': "COLLAPSED",
-            'oauthToken': get_gcs_oauth_token(),
+            'oauthToken': get_gcs_oauth_token(set_env_command=set_env_command),
             'showCoverage': True,
             'height': track_height,
             'color': 'rgb(170, 170, 170)'
@@ -83,7 +91,8 @@ def gen_igv_session_update(
     genome,
     track_height,
     minimumBases,
-    gen_data_mut_index_name_func
+    gen_data_mut_index_name_func,
+    set_env_command=None,
 ):
     
     return [html.Div()]
