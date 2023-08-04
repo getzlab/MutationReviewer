@@ -124,7 +124,6 @@ class GeneralMutationReviewer(ReviewerTemplate):
         init_max_bams_view=2,
         igv_mode='igv_js', # or 'igv_local'
         bam_table_page_size=10,
-        init_max_bams_view=2,
         set_env_command=None,
     ) -> ReviewDataApp:
         """
@@ -182,7 +181,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
         if (igv_mode == 'igv_js') or (igv_mode == 'both'):
             app.add_component(
                 gen_igv_js_component(
-                    bam_table_data_state=State('bam-table', 'data'), 
+                    bam_table_state=State('bam-table', 'data'), 
                     bam_table_selected_rows_state=State('bam-table', 'selected_rows')
                 ),
                 genome=genome,

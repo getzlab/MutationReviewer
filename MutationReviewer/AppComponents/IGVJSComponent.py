@@ -158,13 +158,13 @@ def gen_igv_js_component(bam_table_state: State, bam_table_selected_rows_state: 
     
     Parameters
     ----------
-    bam_table_data_state: State
+    bam_table_state: State
         Dash.State object referencing the "data" attribute of a dash table (ie State('bam-table', 'data')). 
         This table should contain bam file paths or urls
     
     bam_table_selected_rows_state: State
         Dash.State object that is a list of indices used to select rows from the data 
-        in bam_table_data_state (ie State('bam-table', 'selected-rows')). 
+        in bam_table_state (ie State('bam-table', 'selected-rows')). 
     '''
     
     return AppComponent(

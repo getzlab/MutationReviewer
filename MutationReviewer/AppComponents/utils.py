@@ -13,7 +13,7 @@ def load_bams_igv(bams_list, chroms, poss, view_type="collapsed", sort="base", i
         print('set_saveopts')
         ir.set_saveopts(img_dir=img_dir, img_basename = "test.png" )
         print('set viewopts')
-        ir.set_viewopts(view_type=view_type, sort=sort)
+        ir._set_viewopts(view_type=view_type, sort=sort)
         loci_list = [{f'chr{i}': chroms[i], f'pos{i}': poss[i]} for i in range(len(chroms))]
         loci_dict = {k: v for d in loci_list for k, v in d.items()}
         print(loci_dict)
