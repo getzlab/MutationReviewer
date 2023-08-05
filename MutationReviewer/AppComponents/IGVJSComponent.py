@@ -1,3 +1,6 @@
+"""
+Displays an internal IGV session inside the dashboard. Takes a list of bams to load and a genomic coordinate to go to. 
+"""
 import pandas as pd
 import numpy as np
 from dash import dcc, html, dash_table

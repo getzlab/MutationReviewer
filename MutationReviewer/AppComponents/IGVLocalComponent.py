@@ -1,3 +1,6 @@
+"""
+Connects with the local IGV app, outside of the dashboard. Takes a list of bams to load and a genomic coordinate to go to. 
+"""
 import pandas as pd
 import numpy as np
 import dash

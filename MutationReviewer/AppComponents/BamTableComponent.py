@@ -1,3 +1,6 @@
+"""
+Table of bam files. Each row corresponds to a different bam file, and includes a custom field to reference by sample/patient or other feature. Rows are selectable.
+"""
 import pandas as pd
 import numpy as np
 from dash import dcc, html, dash_table

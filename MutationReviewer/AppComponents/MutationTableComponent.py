@@ -1,3 +1,6 @@
+"""
+Table of mutations. Mutations can be grouped by different features, and all mutations that are within a group are displayed (ie by patient (tumors and normal) or exclusively by sample).
+"""
 import pandas as pd
 import numpy as np
 from dash import dcc, html, dash_table

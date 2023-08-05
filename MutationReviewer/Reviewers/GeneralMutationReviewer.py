@@ -1,3 +1,6 @@
+"""
+A general reviewer for reviewing mutations with IGV. Includes default annotations corresponding to Barnell, 2019 Standard operating procedure for reviewing mutations. Iterates through mutations and automatically loads bams and goes to corresponding coordinates for the mutation in IGV (either local or inside the dashboard itself). 
+"""
 from JupyterReviewer.ReviewerTemplate import ReviewerTemplate
 from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
 from JupyterReviewer.DataTypes.GenericData import GenericData
