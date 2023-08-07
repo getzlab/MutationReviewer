@@ -38,13 +38,22 @@ def gen_bam_table_component(
     init_max_bams_view:
         Number of bams to pre-select for loading to IGV.
         
+    Returns
+    -------
+    AppComponent
+        An interactive App Component where the user can select which bams to display in IGV
+        
     '''
     
     return AppComponent(
         name='Sample Bam table',
         layout=gen_mutation_table_igv_layout(bam_table_page_size, init_max_bams_view),
         callback_input=[Input('bam-table', 'selected_rows')],
-        callback_output=[Output('bam-table', 'selected_rows'), Output('bam-table', 'data'), Output('bam-table', 'columns')],
+        callback_output=[
+            Output('bam-table', 'selected_rows'), 
+            Output('bam-table', 'data'), 
+            Output('bam-table', 'columns')
+        ],
         new_data_callback=new_update_bam_table,
         internal_callback=update_bam_table,
     )
@@ -53,6 +62,22 @@ def gen_mutation_table_igv_layout(
     bam_table_page_size,
     init_max_bams_view
 ):
+    """
+    Generates layout to display the mutation table in the dashboard
+    
+    Parameters
+    ----------
+    bam_table_page_size: int
+        Number of bams to display in the bam table at a time. Includes a paging button
+    init_max_bams_view: int
+        initial number of bams to automatically pre-select for loading in IGV
+        
+    Returns
+    -------
+    dash.html
+        Plotly dash layout
+    
+    """
     return html.Div(
         children=[
             # dbc.Table.from_dataframe(df=pd.DataFrame())
@@ -81,6 +106,8 @@ def new_update_bam_table(
     init_max_bams_view
 ):
     '''
+    Callback function to update the bam table when a new mutation is selected
+    
     Parameters
     ----------
     selected_rows: State list
@@ -95,6 +122,11 @@ def new_update_bam_table(
         
     init_max_bams_view:
         Number of bams to pre-select for loading to IGV.
+        
+    Returns
+    -------
+    
+    
     '''
     
     # reset selected rows
@@ -133,6 +165,17 @@ def update_bam_table(
         
     init_max_bams_view:
         Number of bams to pre-select for loading to IGV.
+        
+    Returns
+    -------
+    List[int]
+        Array of indices to select from the bam table to view in IGV
+        
+    List[Dict]
+        List of records of all the relevant bams to be displayed in a table in the dashboard
+        
+    List[Dict]
+        List of records indicating the columns to display in the bam table
     '''
     
     idx_mut_df = data.mutations_df.loc[

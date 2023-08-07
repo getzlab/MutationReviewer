@@ -24,9 +24,24 @@ import os
 import shlex
 from subprocess import Popen, PIPE
 
-def get_gcs_oauth_token(set_env_command=None, access_token_command='gcloud auth application-default print-access-token'):
+def get_gcs_oauth_token(
+    set_env_command=None, 
+    access_token_command='gcloud auth application-default print-access-token'
+):
     '''
     Generates gcloud oauth token for data access
+    
+    Parameters
+    ----------
+    set_env_command: str
+        bash command to run to set the environment before running the command to get the access token
+    access_token_command: str
+        bash command to get the access token. Default is for gcloud
+    
+    Returns
+    -------
+    str
+        Authorization token for loading remote bams in IGV
     '''
     if set_env_command:
         full_command = f'bash -c "{set_env_command}; {access_token_command}"'
@@ -84,7 +99,6 @@ def gen_igv_session(
         
     Return
     ------
-    
     A dash_bio.IGV component
         Contains the tracks specified to load and window centering around the locus (or loci) of interest
     
@@ -141,7 +155,28 @@ def gen_igv_session_update(
 
 
 def gen_igv_session_layout(genome, tracks, locus, minimumBases):
+    """
+    Generate layout for displaying IGV inside the dashboard. See https://dash.plotly.com/dash-bio/igv
     
+    Parameters
+    ----------
+    genome: str
+        Select a genome using an identifier string (e.g. "hg19"). A list of pre-defined genomes hosted by IGV can be found here: https://s3.amazonaws.com/igv.org.genomes/genomes.json.
+        
+    tracks: 
+        Array of configuration objects defining tracks initially displayed when app launches. See https://github.com/igvteam/igv.js/wiki/Tracks-2.0
+        
+    locus: str, List[str]
+        String or list of strings formatted for querying regions of the genome (ie 'chr#', 'chr#:###-###', ['chr2', 'chr3']
+        
+    minimumBases: int
+        Minimum window size in base pairs when zooming in
+        
+    Returns
+    -------
+    plotly.dash.html
+        Layout for dash
+    """
     
     return [
         dashbio.Igv(
@@ -154,7 +189,7 @@ def gen_igv_session_layout(genome, tracks, locus, minimumBases):
         )
     ]
 
-def gen_igv_js_component(bam_table_state: State, bam_table_selected_rows_state: State):
+def gen_igv_js_component(bam_table_state: State, bam_table_selected_rows_state: State) -> AppComponent:
     '''
     Returns a pre-built AppComponent with a button that will update a running local IGV session 
     on click given which rows are selected in a bam table located in a separate component.
@@ -168,6 +203,11 @@ def gen_igv_js_component(bam_table_state: State, bam_table_selected_rows_state: 
     bam_table_selected_rows_state: State
         Dash.State object that is a list of indices used to select rows from the data 
         in bam_table_state (ie State('bam-table', 'selected-rows')). 
+        
+    Returns
+    -------
+    AppComponent
+        Interactive component rendering IGV.js
     '''
     
     return AppComponent(
@@ -181,6 +221,14 @@ def gen_igv_js_component(bam_table_state: State, bam_table_selected_rows_state: 
     )
 
 def gen_igv_js_layout():
+    """
+    Generates dash layout container to hold the igv.js element
+    
+    Returns
+    -------
+    dash.html
+        Plotly dash layout
+    """
     
     return html.Div([
         html.Button('Update tracks from bam table', id='update-tracks-button', n_clicks=0),

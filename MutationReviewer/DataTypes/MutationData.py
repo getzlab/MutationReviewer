@@ -6,6 +6,9 @@ import numpy as np
 from typing import Union, List, Dict
 
 class MutationData(Data):
+    """
+    This Data object is Deprecated. See GeneratMutationData
+    """
     def __init__(
         self,
         index,

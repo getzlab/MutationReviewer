@@ -8,6 +8,9 @@ from pathlib import Path
 import os
 
 class GeneralMutationData(Data):
+    """
+    Data object containing the relevant data needed for mutation review. Can be used to review single variants or observe multiple loci at once (ie breakpoints for the same event)
+    """
     def __init__(
         self,
         index,
@@ -30,29 +33,37 @@ class GeneralMutationData(Data):
         ==========
         mutations_df: pd.DataFrame
             Dataframe with mutations to review
+            
         mutation_groupby_cols: list
             list of columns in mutation_df to groupby. 
                 ex. by chromosome, start position, sample
                 ex. by chromosome, start position, patient to compare across mutations across samples in patient
                 ex. by chromosome and start position to compare across samples
+                
         mutations_df_bam_ref_col: Any
             Column in mutations_df with value to reference bam files in bams_df
                 ex. sample id, patient
+                
         chrom_cols: str, list
             Column(s) in mutations_df referencing chromosome of mutation to review. 
             There can be multiple chromosomes if reviewing structural variants like translocations or fusions
+            
         pos_cols: str, list
             Column(s) in mutation_df referencing the position of the mutation to view.
             There can be multiple positions if reviewing large strcutural variants like translocations or fustions.
                 ex. start and end of a large insertion or tandem duplication
                 ex. Translocation
             **Must be the same length as chrom_cols
+            
         bams_df: pd.DataFrame
             Dataframe with bam files
+            
         bams_df_ref_col: Any
             Column in bams_df to query the bam files (ie sample, participant)
+            
         bam_cols: str, list
             Column(s) in bams_df with the bam file paths or urls
+            
         bai_cols:
             Column(s) in bams_df with the bai file paths or urls. 
             Must be same length as bam_cols and corresponding bam/bai columns must be in the same order

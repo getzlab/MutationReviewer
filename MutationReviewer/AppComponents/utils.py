@@ -1,6 +1,29 @@
 import igv_remote
 
 def load_bams_igv(bams_list, chroms, poss, view_type="collapsed", sort="base", img_dir= "igv_snapshots/"):
+    """
+    Loads a list of bams into IGV and navigates to the corresponding location of the genome
+    
+    Parameters
+    ----------
+    bams_list: List[Union[str, path]]
+        List of paths to bam files
+        
+    chroms: List
+        List of chromosomes to navigate to
+        
+    poss: List
+        List of position to navigate to. Corresponds chromosome value in chroms in the same index
+        
+    view_type: str, ["collapsed", "expanded", "squished"], default="collapsed"
+        How to view the alignments. 
+        
+    sort: str, default="base"
+        Feature to sort by
+        
+    img_dir: str, Path
+        Path to save igv snapshots
+    """
     ir = igv_remote.IGV_remote()
     if len(bams_list) > 0:
         # load igv
@@ -29,15 +52,3 @@ def load_bams_igv(bams_list, chroms, poss, view_type="collapsed", sort="base", i
             ir.connect()
         ir.new()
         ir.close()
-
-        
-def load_bam_igv(bam, chrom, pos, view_type="collapsed", sort="base"):
-    
-    try:
-        ir.connect()
-    except AssertionError:
-        ir.close()
-        ir.connect()
-        
-    ir.load(bam)
-    ir.close()
