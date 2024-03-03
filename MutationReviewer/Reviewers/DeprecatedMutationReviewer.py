@@ -1,3 +1,6 @@
+"""
+Deprecated reviewer. Please see GeneralMutationReviewer.
+"""
 from JupyterReviewer.ReviewerTemplate import ReviewerTemplate
 from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
 from JupyterReviewer.DataTypes.GenericData import GenericData

@@ -1,3 +1,6 @@
+"""
+Connects with the local IGV app, outside of the dashboard. Takes a list of bams to load and a genomic coordinate to go to. 
+"""
 import pandas as pd
 import numpy as np
 import dash
@@ -16,8 +19,7 @@ import os
 import pickle
 import sys
 
-
-from .utils import load_bams_igv, load_bam_igv
+from .utils import load_bams_igv
 from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
 
 
@@ -124,6 +126,11 @@ def gen_igv_local_component(bam_table_data_state: State, bam_table_selected_rows
     bam_table_selected_rows_state: State
         Dash.State object that is a list of indices used to select rows from the data 
         in bam_table_data_state (ie State('bam-table', 'selected-rows')). 
+        
+    Returns
+    -------
+    AppComponent
+        Interactive component that communicates with a local IGV app
     '''
     
     return AppComponent(
@@ -137,6 +144,14 @@ def gen_igv_local_component(bam_table_data_state: State, bam_table_selected_rows
     )
 
 def gen_igv_local_layout():
+    """
+    Generates dash layout for interacting with a local IGV app
+    
+    Returns
+    -------
+    dash.html
+        plotly dash layout
+    """
     
     return html.Div([
         html.Button('Update local IGV from bam table', id='update-local-igv-button', n_clicks=0),

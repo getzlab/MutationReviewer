@@ -1,3 +1,6 @@
+"""
+A general reviewer for reviewing mutations with IGV. Includes default annotations corresponding to Barnell, 2019 Standard operating procedure for reviewing mutations. Iterates through mutations and automatically loads bams and goes to corresponding coordinates for the mutation in IGV (either local or inside the dashboard itself). 
+"""
 from JupyterReviewer.ReviewerTemplate import ReviewerTemplate
 from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
 from JupyterReviewer.DataTypes.GenericData import GenericData
@@ -93,6 +96,11 @@ class GeneralMutationReviewer(ReviewerTemplate):
             
         bai_cols: Union[str, list]
             Column(s) with corresponding bai files to view bams. Corresponding bai columns must be in same order as the bam_cols
+            
+        Returns
+        -------
+        GeneralMutationData
+            Data object containing the relevant data for mutation review
         """
         index = [self.gen_data_mut_index_name(list(map(str, idx))) for idx in mutations_df.groupby(mutation_groupby_cols).count().index]
         mutations_df[chrom_cols] = mutations_df[chrom_cols].astype(str)
@@ -161,6 +169,11 @@ class GeneralMutationReviewer(ReviewerTemplate):
                     1. Open IGV in your VM and log in to your google account
                 
             both: Have both igv_js and igv_local available to load bams
+            
+        Returns
+        -------
+        ReviewDataApp
+            Object that will render the dashboard
         
         """
         app = ReviewDataApp()
