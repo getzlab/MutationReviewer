@@ -154,7 +154,6 @@ def update_bam_table(
     )
     
     stack_bams_df = stack_bams_df.loc[:,~stack_bams_df.columns.duplicated()]
-    
     valid_indices = [i for i in selected_rows if i in range(stack_bams_df.shape[0])]
     
     return [valid_indices, stack_bams_df.to_dict('records'), [{"name": i, "id": i} for i in stack_bams_df.columns.tolist()]]
