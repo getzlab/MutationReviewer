@@ -1,0 +1,3 @@
+[submodule "MutationReviewer/igv_remote"]
+	path = MutationReviewer/igv_remote
+	url = git@github.com:cchu70/igv_remote.git
