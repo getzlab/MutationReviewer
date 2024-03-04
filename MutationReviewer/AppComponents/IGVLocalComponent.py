@@ -11,9 +11,9 @@ import plotly.graph_objects as go
 import pickle
 import dash_bio as dashbio
 
-from JupyterReviewer.Data import Data, DataAnnotation
-from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
-from JupyterReviewer.DataTypes.GenericData import GenericData
+from AnnoMate.Data import Data, DataAnnotation
+from AnnoMate.ReviewDataApp import ReviewDataApp, AppComponent
+from AnnoMate.DataTypes.GenericData import GenericData
 
 import os
 import pickle
@@ -29,7 +29,7 @@ def load_igv_session(
     update_tracks_n_clicks,
     bam_table,
     bam_table_selected_rows,
-    gen_data_mut_index_name_func
+    gen_data_mut_index_name_func,
 ):
     """
     Callback function to run when the data to review changes
@@ -65,13 +65,14 @@ def load_igv_session_update(
     update_tracks_n_clicks,
     bam_table,
     bam_table_selected_rows,
-    gen_data_mut_index_name_func
+    gen_data_mut_index_name_func,
 ):
     """
     Callback function to update local IGV when the Update Tracks button is clicked.
     
     Parameters
     ------
+        
     update_tracks_n_clicks: State
         Dash.State of the number of times a button was clicked
         
@@ -159,7 +160,7 @@ def gen_igv_local_layout():
             children=html.P(
                 """
                 1. Open your local IGV
-                2. Login with your google acount (Google > login)
+                2. Login with your google acount (Google > login) if bam paths are gsurls
                 """
             ), 
             id='local-igv-container'

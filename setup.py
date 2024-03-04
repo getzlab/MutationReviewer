@@ -24,7 +24,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
     install_requires = [
-        'JupyterReviewer>=0.0.3',
+        'AnnoMate>=0.0.2',
         'firecloud-dalmatian',
         'dash-bio'
     ]

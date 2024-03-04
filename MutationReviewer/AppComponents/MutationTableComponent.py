@@ -9,9 +9,9 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pickle
 
-from JupyterReviewer.Data import Data, DataAnnotation
-from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
-from JupyterReviewer.DataTypes.GenericData import GenericData
+from AnnoMate.Data import Data, DataAnnotation
+from AnnoMate.ReviewDataApp import ReviewDataApp, AppComponent
+from AnnoMate.DataTypes.GenericData import GenericData
 
 import os
 import pickle

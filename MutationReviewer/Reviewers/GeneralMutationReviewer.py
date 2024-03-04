@@ -1,11 +1,11 @@
 """
 A general reviewer for reviewing mutations with IGV. Includes default annotations corresponding to Barnell, 2019 Standard operating procedure for reviewing mutations. Iterates through mutations and automatically loads bams and goes to corresponding coordinates for the mutation in IGV (either local or inside the dashboard itself). 
 """
-from JupyterReviewer.ReviewerTemplate import ReviewerTemplate
-from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
-from JupyterReviewer.DataTypes.GenericData import GenericData
-from JupyterReviewer.Data import Data, DataAnnotation
-from JupyterReviewer.AnnotationDisplayComponent import *
+from AnnoMate.ReviewerTemplate import ReviewerTemplate
+from AnnoMate.ReviewDataApp import ReviewDataApp, AppComponent
+from AnnoMate.DataTypes.GenericData import GenericData
+from AnnoMate.Data import Data, DataAnnotation
+from AnnoMate.AnnotationDisplayComponent import *
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
@@ -23,6 +23,8 @@ from MutationReviewer.AppComponents.IGVJSComponent import gen_igv_js_component
 from MutationReviewer.AppComponents.IGVLocalComponent import gen_igv_local_component
 from MutationReviewer.AppComponents.MutationTableComponent import gen_mutation_table_component
 from MutationReviewer.DataTypes.GeneralMutationData import GeneralMutationData
+
+import igv_remote
         
 
 class GeneralMutationReviewer(ReviewerTemplate):
@@ -133,6 +135,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
         igv_mode='igv_js', # or 'igv_local'
         bam_table_page_size=10,
         set_env_command=None,
+        local_igv_view_type="collapsed", local_igv_sort="base", local_igv_img_dir= "igv_snapshots/"
     ) -> ReviewDataApp:
         """
         Parameters
@@ -192,6 +195,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
         )
         
         if (igv_mode == 'igv_js') or (igv_mode == 'both'):
+            
             app.add_component(
                 gen_igv_js_component(
                     bam_table_state=State('bam-table', 'data'), 
@@ -205,12 +209,28 @@ class GeneralMutationReviewer(ReviewerTemplate):
             )
             
         if igv_mode == 'igv_local' or (igv_mode == 'both'):
+
+            # self.ir = igv_remote.IGV_remote()
+
+            # try:
+            #     self.ir.connect()
+            #     self.ir.close()
+            # except ConnectionRefusedError as e:
+            #     print(e)
+            #     raise ConnectionRefusedError("IGV application is not open.")
+
+            # print('set_saveopts')
+            # self.ir.set_saveopts(img_dir=local_igv_img_dir, img_basename = "test.png" )
+            # print('set viewopts')
+            # self.ir.set_viewopts(view_type=local_igv_view_type, sort=local_igv_sort)
+            
             app.add_component(
                 gen_igv_local_component(
                     bam_table_data_state=State('bam-table', 'data'), 
                     bam_table_selected_rows_state=State('bam-table', 'selected_rows')
                 ),
-                gen_data_mut_index_name_func=self.gen_data_mut_index_name
+                gen_data_mut_index_name_func=self.gen_data_mut_index_name,
+                # ir=self.ir
             )
         
         return app
@@ -238,7 +258,7 @@ class GeneralMutationReviewer(ReviewerTemplate):
                     'Short Insert',
                     'Short Insert Only',
                     'Same Start and End',
-                    "Within 30bp of 3' end"
+                    "Within 30bp of 3prime end"
                 ]
             )
         )

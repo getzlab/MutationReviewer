@@ -10,9 +10,9 @@ import plotly.graph_objects as go
 import pickle
 import dash_bio as dashbio
 
-from JupyterReviewer.Data import Data, DataAnnotation
-from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
-from JupyterReviewer.DataTypes.GenericData import GenericData
+from AnnoMate.Data import Data, DataAnnotation
+from AnnoMate.ReviewDataApp import ReviewDataApp, AppComponent
+from AnnoMate.DataTypes.GenericData import GenericData
 
 import os
 import pickle
@@ -113,6 +113,7 @@ def gen_igv_session(
 
     bams_df = pd.DataFrame.from_records(bam_table)
     valid_indices = [i for i in bam_table_selected_rows if i in range(bams_df.shape[0])]
+
     tracks = [
         {
             'name': r[data.bams_df_ref_col],
@@ -131,7 +132,7 @@ def gen_igv_session(
         genome=genome, 
         tracks=tracks, 
         locus=locus, 
-        minimumBases=minimumBases
+        minimumBases=minimumBases,
     )
 
 def gen_igv_session_update(

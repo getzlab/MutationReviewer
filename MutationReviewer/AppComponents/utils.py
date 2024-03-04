@@ -1,6 +1,6 @@
 import igv_remote
 
-def load_bams_igv(bams_list, chroms, poss, view_type="collapsed", sort="base", img_dir= "igv_snapshots/"):
+def load_bams_igv(bams_list, chroms, poss, view_type="collapse", sort="base", img_dir= "igv_snapshots/", verbose=False, recv_timeout=60):
     """
     Loads a list of bams into IGV and navigates to the corresponding location of the genome
     
@@ -24,31 +24,17 @@ def load_bams_igv(bams_list, chroms, poss, view_type="collapsed", sort="base", i
     img_dir: str, Path
         Path to save igv snapshots
     """
-    ir = igv_remote.IGV_remote()
+    ir = igv_remote.IGV_remote(view_type=view_type, sort=sort, verbose=verbose, recv_timeout=recv_timeout)
+    ir.new()
     if len(bams_list) > 0:
-        # load igv
-        try:
-            ir.connect()
-        except AssertionError:
-            ir.close()
-            ir.connect()
-        ir.new()
-        print('set_saveopts')
+
         ir.set_saveopts(img_dir=img_dir, img_basename = "test.png" )
-        print('set viewopts')
-        ir._set_viewopts(view_type=view_type, sort=sort)
-        loci_list = [{f'chr{i}': chroms[i], f'pos{i}': poss[i]} for i in range(len(chroms))]
+        ir.set_viewopts(view_type=view_type, sort=sort)
+        
+        loci_list = [{f'chr{i + 1}': chroms[i], f'pos{i + 1}': poss[i]} for i in range(len(chroms))]
         loci_dict = {k: v for d in loci_list for k, v in d.items()}
-        print(loci_dict)
-        print('loci')
         ir.goto_multiple(**loci_dict)
         ir.load(*bams_list)
-        ir.close()
     else:
-        try:
-            ir.connect()
-        except AssertionError:
-            ir.close()
-            ir.connect()
-        ir.new()
-        ir.close()
+        print("no bams selected")
+        
