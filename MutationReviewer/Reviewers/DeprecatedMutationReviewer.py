@@ -1,11 +1,11 @@
 """
 Deprecated reviewer. Please see GeneralMutationReviewer.
 """
-from JupyterReviewer.ReviewerTemplate import ReviewerTemplate
-from JupyterReviewer.ReviewDataApp import ReviewDataApp, AppComponent
-from JupyterReviewer.DataTypes.GenericData import GenericData
-from JupyterReviewer.Data import Data, DataAnnotation
-from JupyterReviewer.AnnotationDisplayComponent import *
+from AnnoMate.ReviewerTemplate import ReviewerTemplate
+from AnnoMate.ReviewDataApp import ReviewDataApp, AppComponent
+from AnnoMate.DataTypes.GenericData import GenericData
+from AnnoMate.Data import Data, DataAnnotation
+from AnnoMate.AnnotationDisplayComponent import *
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State

@@ -1,5 +1,5 @@
-from JupyterReviewer.DataTypes.GenericData import GenericData
-from JupyterReviewer.Data import Data, DataAnnotation
+from AnnoMate.DataTypes.GenericData import GenericData
+from AnnoMate.Data import Data, DataAnnotation
 
 import pandas as pd
 import numpy as np

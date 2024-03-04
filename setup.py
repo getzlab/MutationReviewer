@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Claudia Chu",
     author_email="cchu@broadinstitute.org",
-    description="A tool to review mutations using JupyterReviewer Plotly dashboards",
+    description="A tool to review mutations using AnnoMate dashboards",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/getzlab/MutationReviewer",
