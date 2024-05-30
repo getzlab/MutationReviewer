@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="MutationReviewer",
-    version="0.0.1",
+    version="1.0.0",
     author="Claudia Chu",
     author_email="cchu@broadinstitute.org",
     description="A tool to review mutations using AnnoMate dashboards",
@@ -24,7 +24,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
     install_requires = [
-        'AnnoMate>=0.0.2',
+        'AnnoMate>=1.0.0',
         'firecloud-dalmatian',
         'dash-bio'
     ]
