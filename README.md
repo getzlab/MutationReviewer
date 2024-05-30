@@ -32,11 +32,12 @@ git clone git@github.com:getzlab/MutationReviewer.git --recurse-submodules
 git submodule add git@github.com:getzlab/MutationReviewer.git --recurse-submodules
 ```
 
-Install
+Install MutationReviewer and igv_remote (this package connects to your local IGV app)
 ```
 cd MutationReviewer
 conda activate <your_env>
 pip install -e .
+pip install -e MutationReviewer/igv_remote/.
 ```
 
 # Basic usage
